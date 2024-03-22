@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/presentation/screens/pin_verification_screen.dart';
 import 'package:taskmanager/presentation/screens/sign_in_screen.dart';
 import 'package:taskmanager/presentation/widgets/background_widget.dart';
 
