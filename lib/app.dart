@@ -41,6 +41,9 @@ class TaskManager extends StatelessWidget {
             ),
           ),
         ),
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+        ),
       ),
     );
   }

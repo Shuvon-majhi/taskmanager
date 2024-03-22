@@ -1,42 +1,75 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/presentation/screens/email_verification_screen.dart';
-import 'package:taskmanager/presentation/screens/sign_up_screen.dart';
 import 'package:taskmanager/presentation/widgets/background_widget.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailTEController = TextEditingController();
+  final TextEditingController _firstNameTEController = TextEditingController();
+  final TextEditingController _lastNameTEController = TextEditingController();
+  final TextEditingController _numberTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: backgroundwidget(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(25.0),
+            padding: const EdgeInsets.all(24.0),
             child: Form(
               key: _globalKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
-                    height: 100,
+                    height: 80,
                   ),
-                  Text('Get Started With',
-                      style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    'Join With Us',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   TextFormField(
                     controller: _emailTEController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       hintText: 'Email',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: _firstNameTEController,
+                    decoration: const InputDecoration(
+                      hintText: 'First Name',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: _lastNameTEController,
+                    decoration: const InputDecoration(
+                      hintText: 'Last Name',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: _numberTEController,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      hintText: 'Mobile Number',
                     ),
                   ),
                   const SizedBox(
@@ -52,7 +85,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 32,
                   ),
                   SizedBox(
                     width: double.infinity,
@@ -63,49 +96,20 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 48,
-                  ),
-                  Center(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.grey,
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const EmailVerificationScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text('Forgot password'),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "Don't have an account?",
+                        "Have an account?",
                         style: TextStyle(fontSize: 16, color: Colors.black54),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignUpScreen(),
-                            ),
-                          );
+                          Navigator.pop(context);
                         },
-                        child: const Text('Sign Up'),
+                        child: const Text('Sign In'),
                       ),
                     ],
                   ),
@@ -121,6 +125,9 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void dispose() {
     _emailTEController.dispose();
+    _firstNameTEController.dispose();
+    _lastNameTEController.dispose();
+    _numberTEController.dispose();
     _passwordTEController.dispose();
     super.dispose();
   }
