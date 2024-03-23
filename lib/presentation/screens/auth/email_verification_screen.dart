@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:taskmanager/presentation/screens/set_password_screen.dart';
-import 'package:taskmanager/presentation/screens/sign_in_screen.dart';
-import 'package:taskmanager/presentation/utils/app_colors.dart';
+import 'package:taskmanager/presentation/screens/auth/pin_verification_screen.dart';
 import 'package:taskmanager/presentation/widgets/background_widget.dart';
 
-class PinVerificationScreen extends StatefulWidget {
-  const PinVerificationScreen({super.key});
+class EmailVerificationScreen extends StatefulWidget {
+  const EmailVerificationScreen({super.key});
 
   @override
-  State<PinVerificationScreen> createState() => _PinVerificationScreenState();
+  State<EmailVerificationScreen> createState() =>
+      _EmailVerificationScreenState();
 }
 
-class _PinVerificationScreenState extends State<PinVerificationScreen> {
-  final TextEditingController _pinTEController = TextEditingController();
+class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
+  final TextEditingController _emailTEController = TextEditingController();
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
 
   @override
@@ -31,7 +29,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                   const SizedBox(
                     height: 100,
                   ),
-                  Text('Pin Verification',
+                  Text('Your Email Address',
                       style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(
                     height: 4,
@@ -43,28 +41,15 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  PinCodeTextField(
-                    controller: _pinTEController,
-                    length: 6,
-                    obscureText: false,
-                    animationType: AnimationType.fade,
-                    keyboardType: TextInputType.number,
-                    pinTheme: PinTheme(
-                      shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(5),
-                      fieldHeight: 50,
-                      fieldWidth: 40,
-                      activeFillColor: Colors.white,
-                      inactiveColor: AppColors.themecolor,
-                      inactiveFillColor: Colors.white,
-                      selectedFillColor: Colors.white,
+                  TextFormField(
+                    controller: _emailTEController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      hintText: 'Email',
                     ),
-                    animationDuration: const Duration(milliseconds: 300),
-                    backgroundColor: Colors.transparent,
-                    enableActiveFill: true,
-                    onCompleted: (v) {},
-                    onChanged: (value) {},
-                    appContext: context,
+                  ),
+                  const SizedBox(
+                    height: 20,
                   ),
                   SizedBox(
                     width: double.infinity,
@@ -74,11 +59,11 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SetPasswordScreen(),
+                            builder: (context) => const PinVerificationScreen(),
                           ),
                         );
                       },
-                      child: const Text("Verify"),
+                      child: const Icon(Icons.arrow_circle_right_outlined),
                     ),
                   ),
                   const SizedBox(
@@ -93,13 +78,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignInScreen(),
-                            ),
-                            (route) => false,
-                          );
+                          Navigator.pop(context);
                         },
                         child: const Text('Sign In'),
                       ),
@@ -116,7 +95,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
 
   @override
   void dispose() {
-    _pinTEController.dispose();
+    _emailTEController.dispose();
     super.dispose();
   }
 }

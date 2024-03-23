@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanager/presentation/screens/sign_in_screen.dart';
+import 'package:taskmanager/presentation/screens/auth/sign_in_screen.dart';
 import 'package:taskmanager/presentation/widgets/app_logo.dart';
 import 'package:taskmanager/presentation/widgets/background_widget.dart';
 
