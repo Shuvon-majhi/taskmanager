@@ -6,6 +6,7 @@ import 'package:taskmanager/presentation/utils/app_colors.dart';
 
 PreferredSizeWidget get profileAppBar {
   return AppBar(
+    automaticallyImplyLeading: false,
     backgroundColor: AppColors.themecolor,
     title: GestureDetector(
       onTap: () {
