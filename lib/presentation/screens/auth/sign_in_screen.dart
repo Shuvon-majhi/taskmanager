@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/data/models/login_response.dart';
 import 'package:taskmanager/data/models/response_object.dart';
 import 'package:taskmanager/data/services/network_caller.dart';
 import 'package:taskmanager/data/utility/urls.dart';
+import 'package:taskmanager/presentation/controller/auth_controller.dart';
 import 'package:taskmanager/presentation/screens/auth/email_verification_screen.dart';
 import 'package:taskmanager/presentation/screens/auth/sign_up_screen.dart';
 import 'package:taskmanager/presentation/screens/main_bottom_nav_screen.dart';
@@ -158,6 +160,16 @@ class _SignInScreenState extends State<SignInScreen> {
     _IsLogInProgress = false;
     setState(() {});
     if (response.isSucces) {
+      if (!mounted) {
+        return;
+      }
+      LogInResponse loginResponse =
+          LogInResponse.fromJson(response.responseBody);
+          
+      // save the data to local cache
+      await AuthController.saveUserData(loginResponse.userData!);
+      await AuthController.saveUserToken(loginResponse.token!);
+
       if (mounted) {
         Navigator.pushAndRemoveUntil(
           context,
@@ -169,7 +181,8 @@ class _SignInScreenState extends State<SignInScreen> {
       }
     } else {
       if (mounted) {
-        showSnackBarMessage(context, response.errorMessage ?? 'LogIn Failed! Please try again');
+        showSnackBarMessage(
+            context, response.errorMessage ?? 'LogIn Failed! Please try again');
       }
     }
   }

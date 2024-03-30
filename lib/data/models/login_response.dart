@@ -3,13 +3,13 @@ import 'package:taskmanager/data/models/user_data.dart';
 class LogInResponse {
   String? status;
   String? token;
-  UserData? data;
+  UserData? userData;
 
-  LogInResponse({this.status, this.token, this.data});
+  LogInResponse({this.status, this.token, this.userData});
 
   LogInResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     token = json['token'];
-    data = json['data'] != null ? UserData.fromJson(json['data']) : null;
+    userData = json['data'] != null ? UserData.fromJson(json['data']) : null;
   }
 }
