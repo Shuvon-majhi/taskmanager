@@ -19,7 +19,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _numberTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _foreKey = GlobalKey<FormState>();
-  bool IsRegisrationInProgress = false;
+  bool _IsRegisrationInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +131,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: double.infinity,
                     height: 43,
                     child: Visibility(
-                      visible: IsRegisrationInProgress == false,
+                      visible: _IsRegisrationInProgress == false,
                       replacement: const Center(
                         child: CircularProgressIndicator(),
                       ),
@@ -173,8 +173,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _signUp() async {
-    IsRegisrationInProgress = true;
+    _IsRegisrationInProgress = true;
     setState(() {});
+
     Map<String, dynamic> inputParams = {
       "email": _emailTEController.text.trim(),
       "firstName": _firstNameTEController.text.trim(),
@@ -182,9 +183,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       "mobile": _numberTEController.text.trim(),
       "password": _passwordTEController.text.trim(),
     };
+
     final ResponseObject response =
         await NetworkCaller.postRequest(Urls.regisration, inputParams);
-    IsRegisrationInProgress = false;
+    _IsRegisrationInProgress = false;
     setState(() {});
     if (response.isSucces) {
       if (mounted) {

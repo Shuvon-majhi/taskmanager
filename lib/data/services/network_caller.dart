@@ -18,7 +18,7 @@ class NetworkCaller {
         return ResponseObject(
           isSucces: false,
           statusCode: response.statusCode,
-          responseBody: " ",
+          responseBody: '',
         );
       }
     } catch (e) {
@@ -48,17 +48,14 @@ class NetworkCaller {
         final decodedResponse = jsonDecode(response.body);
         return ResponseObject(
             isSucces: true, statusCode: 200, responseBody: decodedResponse);
-      } 
-      else if(response.statusCode==401){
+      } else if (response.statusCode == 401) {
         return ResponseObject(
           isSucces: false,
           statusCode: response.statusCode,
           responseBody: '',
           errorMessage: 'Email/Password is Incorrect! Try again',
         );
-
-      }
-      else {
+      } else {
         return ResponseObject(
           isSucces: false,
           statusCode: response.statusCode,
