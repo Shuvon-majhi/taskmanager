@@ -35,9 +35,12 @@ class NetworkCaller {
   static Future<ResponseObject> postRequest(
       String url, Map<String, dynamic> body) async {
     try {
+      log(url);
+      log(body.toString());
       final Response response = await post(Uri.parse(url),
           body: jsonEncode(body),
           headers: {'Content-type': 'application/json'});
+
       log(response.statusCode.toString());
       log(response.body.toString());
 
@@ -45,11 +48,21 @@ class NetworkCaller {
         final decodedResponse = jsonDecode(response.body);
         return ResponseObject(
             isSucces: true, statusCode: 200, responseBody: decodedResponse);
-      } else {
+      } 
+      else if(response.statusCode==401){
         return ResponseObject(
           isSucces: false,
           statusCode: response.statusCode,
-          responseBody: " ",
+          responseBody: '',
+          errorMessage: 'Email/Password is Incorrect! Try again',
+        );
+
+      }
+      else {
+        return ResponseObject(
+          isSucces: false,
+          statusCode: response.statusCode,
+          responseBody: '',
         );
       }
     } catch (e) {

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/data/models/response_object.dart';
+import 'package:taskmanager/data/services/network_caller.dart';
+import 'package:taskmanager/data/utility/urls.dart';
 import 'package:taskmanager/presentation/widgets/background_widget.dart';
+import 'package:taskmanager/presentation/widgets/snack_bar_message.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -14,7 +18,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _lastNameTEController = TextEditingController();
   final TextEditingController _numberTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
-  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _foreKey = GlobalKey<FormState>();
+  bool IsRegisrationInProgress = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Form(
-              key: _globalKey,
+              key: _foreKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -43,6 +49,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Email',
                     ),
+                    validator: (String? value) {
+                      if (value?.trim().isEmpty ?? true) {
+                        return 'Enter Your Email';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -52,6 +64,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: const InputDecoration(
                       hintText: 'First Name',
                     ),
+                    validator: (String? value) {
+                      if (value?.trim().isEmpty ?? true) {
+                        return 'Enter Your First Name';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -61,6 +79,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Last Name',
                     ),
+                    validator: (String? value) {
+                      if (value?.trim().isEmpty ?? true) {
+                        return 'Enter Your Last Name';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -71,6 +95,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Mobile Number',
                     ),
+                    validator: (String? value) {
+                      if (value?.trim().isEmpty ?? true) {
+                        return 'Enter Your Mobile Number';
+                      }
+                      return null;
+                    },
+                    maxLength: 11,
                   ),
                   const SizedBox(
                     height: 10,
@@ -83,6 +114,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Password',
                     ),
+                    validator: (String? value) {
+                      if (value?.trim().isEmpty ?? true) {
+                        return 'Enter Your Password';
+                      }
+                      if (value!.length <= 6) {
+                        return 'Password should more tham 6 latter';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 32,
@@ -90,9 +130,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(
                     width: double.infinity,
                     height: 43,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Icon(Icons.arrow_circle_right_outlined),
+                    child: Visibility(
+                      visible: IsRegisrationInProgress == false,
+                      replacement: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_foreKey.currentState!.validate()) {
+                            _signUp();
+                          }
+                        },
+                        child: const Icon(Icons.arrow_circle_right_outlined),
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -120,6 +170,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _signUp() async {
+    IsRegisrationInProgress = true;
+    setState(() {});
+    Map<String, dynamic> inputParams = {
+      "email": _emailTEController.text.trim(),
+      "firstName": _firstNameTEController.text.trim(),
+      "lastName": _lastNameTEController.text.trim(),
+      "mobile": _numberTEController.text.trim(),
+      "password": _passwordTEController.text.trim(),
+    };
+    final ResponseObject response =
+        await NetworkCaller.postRequest(Urls.regisration, inputParams);
+    IsRegisrationInProgress = false;
+    setState(() {});
+    if (response.isSucces) {
+      if (mounted) {
+        showSnackBarMessage(context, "Regisration Succes! Please logIn");
+        Navigator.pop(context);
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(context, 'Regisration failed! Try again', true);
+      }
+    }
   }
 
   @override
