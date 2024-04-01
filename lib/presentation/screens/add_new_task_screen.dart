@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:taskmanager/data/services/network_caller.dart';
 import 'package:taskmanager/data/utility/urls.dart';
 import 'package:taskmanager/presentation/widgets/background_widget.dart';
