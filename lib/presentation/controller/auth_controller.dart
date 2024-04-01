@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskmanager/data/models/user_data.dart';
 
 class AuthController {
+  static String? accessToken;
+
   static Future<void> saveUserData(UserData userData) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setString(
@@ -22,6 +24,7 @@ class AuthController {
   static Future<void> saveUserToken(String token) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setString('token', token);
+    accessToken = token;
   }
 
   static Future<String?> getUserToken() async {
@@ -31,6 +34,7 @@ class AuthController {
 
   static Future<bool> isUserLoggedIn() async {
     final result = await getUserToken();
+    accessToken = result;
     return result != null;
   }
 
