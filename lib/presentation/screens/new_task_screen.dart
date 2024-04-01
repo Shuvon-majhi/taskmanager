@@ -81,9 +81,11 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
           itemCount: _countByStatusWrapper.listOfTaskByStatusData?.length ?? 0,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
-            return const TaskCounterCard(
-              amount: 23,
-              title: 'New',
+            return TaskCounterCard(
+              title: _countByStatusWrapper.listOfTaskByStatusData![index].sId ??
+                  '',
+              amount:
+                  _countByStatusWrapper.listOfTaskByStatusData![index].sum ?? 0,
             );
           },
           separatorBuilder: (_, __) {

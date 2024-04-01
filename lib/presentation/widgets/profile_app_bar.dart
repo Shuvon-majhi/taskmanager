@@ -10,7 +10,7 @@ PreferredSizeWidget get profileAppBar {
     automaticallyImplyLeading: false,
     backgroundColor: AppColors.themecolor,
     title: GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(
           TaskManager.navigatarKey.currentState!.context,
           MaterialPageRoute(
@@ -24,17 +24,17 @@ PreferredSizeWidget get profileAppBar {
           const SizedBox(
             width: 12,
           ),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Shuvon Majhi',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  AuthController.userData?.fullName ?? '',
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
                 Text(
-                  'abcd@gmail.com',
-                  style: TextStyle(
+                  AuthController.userData?.email ?? '',
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -44,7 +44,7 @@ PreferredSizeWidget get profileAppBar {
             ),
           ),
           IconButton(
-            onPressed: () async{
+            onPressed: () async {
               await AuthController.clearUserData();
               Navigator.pushAndRemoveUntil(
                   TaskManager.navigatarKey.currentState!.context,

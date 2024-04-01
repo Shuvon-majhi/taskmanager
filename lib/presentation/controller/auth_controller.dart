@@ -5,11 +5,13 @@ import 'package:taskmanager/data/models/user_data.dart';
 
 class AuthController {
   static String? accessToken;
+  static UserData? userData;
 
   static Future<void> saveUserData(UserData userData) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setString(
         'userData', jsonEncode(userData.toJson()));
+    AuthController.userData = userData;
   }
 
   static Future<UserData?> getUserdata() async {
@@ -18,7 +20,10 @@ class AuthController {
     if (result == null) {
       return null;
     }
-    return UserData.fromJson(jsonDecode(result));
+
+    final user = UserData.fromJson(jsonDecode(result));
+    AuthController.userData = user;
+    return user;
   }
 
   static Future<void> saveUserToken(String token) async {
@@ -35,7 +40,11 @@ class AuthController {
   static Future<bool> isUserLoggedIn() async {
     final result = await getUserToken();
     accessToken = result;
-    return result != null;
+    bool loginState = result != null;
+    if (loginState) {
+      await getUserdata();
+    }
+    return loginState;
   }
 
   static Future<void> clearUserData() async {
