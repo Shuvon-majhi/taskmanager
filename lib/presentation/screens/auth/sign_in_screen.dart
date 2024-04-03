@@ -155,8 +155,9 @@ class _SignInScreenState extends State<SignInScreen> {
       "email": _emailTEController.text.trim(),
       "password": _passwordTEController.text.trim(),
     };
-    final ResponseObject response =
-        await NetworkCaller.postRequest(Urls.login, inputParams);
+    final ResponseObject response = await NetworkCaller.postRequest(
+        Urls.login, inputParams,
+        fromSignIn: true);
     _IsLogInProgress = false;
     setState(() {});
     if (response.isSucces) {
@@ -165,7 +166,7 @@ class _SignInScreenState extends State<SignInScreen> {
       }
       LogInResponse loginResponse =
           LogInResponse.fromJson(response.responseBody);
-          
+
       // save the data to local cache
       await AuthController.saveUserData(loginResponse.userData!);
       await AuthController.saveUserToken(loginResponse.token!);
