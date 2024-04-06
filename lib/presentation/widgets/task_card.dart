@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:taskmanager/data/models/task_item.dart';
+import 'package:taskmanager/data/services/network_caller.dart';
+import 'package:taskmanager/data/utility/urls.dart';
+import 'package:taskmanager/presentation/widgets/snack_bar_message.dart';
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatefulWidget {
   const TaskCard({
     super.key,
     required this.taskItem,
-    required this.onDelete, required this.onEdit,
+    required this.refreshList,
   });
 
   final TaskItem taskItem;
-  final VoidCallback onDelete;
-  final VoidCallback onEdit;
+  final VoidCallback refreshList;
 
+  @override
+  State<TaskCard> createState() => _TaskCardState();
+}
+
+class _TaskCardState extends State<TaskCard> {
+  bool _updateStatusInProgress = false;
+  bool _deleteTaskInProgress = false;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -23,24 +32,36 @@ class TaskCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              taskItem.title ?? '',
+              widget.taskItem.title ?? '',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            Text(taskItem.description ?? ''),
-            Text('Date: ${taskItem.createdDate}'),
+            Text(widget.taskItem.description ?? ''),
+            Text('Date: ${widget.taskItem.createdDate}'),
             Row(
               children: [
                 Chip(
-                  label: Text(taskItem.status ?? ''),
+                  label: Text(widget.taskItem.status ?? ''),
                 ),
                 const Spacer(),
-                IconButton(
-                  onPressed: onEdit,
-                  icon: const Icon(Icons.edit),
+                Visibility(
+                  visible: _updateStatusInProgress == false,
+                  replacement: const CircularProgressIndicator(),
+                  child: IconButton(
+                    onPressed: () {
+                      _showUpdateStatusDialog(widget.taskItem.sId!);
+                    },
+                    icon: const Icon(Icons.edit),
+                  ),
                 ),
-                IconButton(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline),
+                Visibility(
+                  visible: _deleteTaskInProgress == false,
+                  replacement: const CircularProgressIndicator(),
+                  child: IconButton(
+                    onPressed: () {
+                      _deleteTaskById(widget.taskItem.sId!);
+                    },
+                    icon: const Icon(Icons.delete_outline),
+                  ),
                 ),
               ],
             ),
@@ -48,5 +69,95 @@ class TaskCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _showUpdateStatusDialog(String id) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Select status'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('New'),
+                trailing:
+                    _isCurrentStatus('New') ? const Icon(Icons.check) : null,
+                onTap: () {
+                  if (_isCurrentStatus('New')) {
+                    return;
+                  }
+                  _isCurrentStatus('New');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Completed'),
+                trailing: _isCurrentStatus('Completed')
+                    ? const Icon(Icons.check)
+                    : null,
+                onTap: () {
+                  if (_isCurrentStatus('Completed')) {
+                    return;
+                  }
+                  _isCurrentStatus('Completed');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Progress'),
+                trailing: _isCurrentStatus('Progress')
+                    ? const Icon(Icons.check)
+                    : null,
+                onTap: () {
+                  if (_isCurrentStatus('Progress')) {
+                    return;
+                  }
+                  _isCurrentStatus('Progress');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Cancelled'),
+                trailing: _isCurrentStatus('Cancelled')
+                    ? const Icon(Icons.check)
+                    : null,
+                onTap: () {
+                  if (_isCurrentStatus('Cancelled')) {
+                    return;
+                  }
+                  _isCurrentStatus('Cancelled');
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+  Future<void> _deleteTaskById(String id) async {
+    _deleteTaskInProgress = true;
+    setState(() {});
+    final response = await NetworkCaller.getRequest(Urls.deleteTask(id));
+    _deleteTaskInProgress = false;
+    if (response.isSucces) {
+      widget.refreshList();
+    } else {
+      setState(() {});
+      if (mounted) {
+        showSnackBarMessage(
+          context,
+          response.errorMessage ?? 'delete taks has been failed',
+        );
+      }
+    }
+  }
+
+  bool _isCurrentStatus(String status) {
+    return widget.taskItem.status! == status;
   }
 }
