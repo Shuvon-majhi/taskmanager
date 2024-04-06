@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taskmanager/presentation/widgets/background_widget.dart';
 import 'package:taskmanager/presentation/widgets/profile_app_bar.dart';
-import 'package:taskmanager/presentation/widgets/task_card.dart';
 
 class CancelledTaskScreen extends StatefulWidget {
   const CancelledTaskScreen({super.key});

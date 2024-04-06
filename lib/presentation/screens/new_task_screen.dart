@@ -20,6 +20,7 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
+  
   bool _getAllTaskCountByStatusInProgress = false;
   bool _getNewTaskListInProgress = false;
   CountByStatusWrapper _countByStatusWrapper = CountByStatusWrapper();
@@ -32,6 +33,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   void _getDatafromApis() {
+
     _getAllNewTaskList();
     _getAllTaskCountByStatus();
   }
