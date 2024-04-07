@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:taskmanager/data/models/count_by_status_wrapper.dart';
 import 'package:taskmanager/data/models/task_list_wrapper.dart';
 import 'package:taskmanager/data/services/network_caller.dart';
