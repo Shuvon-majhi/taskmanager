@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:taskmanager/data/models/user_data.dart';
 import 'package:taskmanager/data/services/network_caller.dart';
 import 'package:taskmanager/data/utility/urls.dart';
 import 'package:taskmanager/presentation/controller/auth_controller.dart';
-import 'package:taskmanager/presentation/screens/auth/sign_in_screen.dart';
 import 'package:taskmanager/presentation/screens/main_bottom_nav_screen.dart';
 import 'package:taskmanager/presentation/widgets/background_widget.dart';
 import 'package:taskmanager/presentation/widgets/profile_app_bar.dart';
