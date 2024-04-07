@@ -18,6 +18,14 @@ class CancelledTaskScreen extends StatefulWidget {
 class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
   bool _getCancelledTaskListInProgress = false;
   TaskListWrapper _cancelledTaskListWrapper = TaskListWrapper();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getAllcancelledTaskList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

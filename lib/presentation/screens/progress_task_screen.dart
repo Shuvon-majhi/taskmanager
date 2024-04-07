@@ -20,6 +20,13 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
   TaskListWrapper _progressTaskListWrapper = TaskListWrapper();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getAllProgressTaskList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: profileAppBar,
@@ -42,7 +49,7 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
                   return TaskCard(
                     taskItem: _progressTaskListWrapper.taskList![index],
                     refreshList: () {
-                      _getAllProgressTaskList();
+                      //_getAllProgressTaskList();
                     },
                   );
                 },
@@ -57,6 +64,7 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
   Future<void> _getAllProgressTaskList() async {
     _getProgressTaskListInProgress = true;
     setState(() {});
+
     final response = await NetworkCaller.getRequest(Urls.progressTaskList);
     if (response.isSucces) {
       _progressTaskListWrapper =
