@@ -3,6 +3,7 @@ import 'package:taskmanager/data/models/task_list_wrapper.dart';
 import 'package:taskmanager/data/services/network_caller.dart';
 import 'package:taskmanager/data/utility/urls.dart';
 import 'package:taskmanager/presentation/widgets/background_widget.dart';
+import 'package:taskmanager/presentation/widgets/empty_list_widget.dart';
 import 'package:taskmanager/presentation/widgets/profile_app_bar.dart';
 import 'package:taskmanager/presentation/widgets/snack_bar_message.dart';
 import 'package:taskmanager/presentation/widgets/task_card.dart';
@@ -34,16 +35,26 @@ class _CompleteTaskScreenState extends State<CompleteTaskScreen> {
           replacement: const Center(
             child: CircularProgressIndicator(),
           ),
-          child: ListView.builder(
-            itemCount: _completedTaskListWrapper.taskList?.length ?? 0,
-            itemBuilder: (context, index) {
-              return TaskCard(
-                taskItem: _completedTaskListWrapper.taskList![index],
-                refreshList: () {
-                  _getAllCompleteTaskList();
-                },
-              );
+          //TODO: make it refresh indicator workable
+          child: RefreshIndicator(
+            onRefresh: () async {
+              _getAllCompleteTaskList();
             },
+            child: Visibility(
+              visible: _completedTaskListWrapper.taskList?.isNotEmpty ?? false,
+              replacement: const emptyListWidget(),
+              child: ListView.builder(
+                itemCount: _completedTaskListWrapper.taskList?.length ?? 0,
+                itemBuilder: (context, index) {
+                  return TaskCard(
+                    taskItem: _completedTaskListWrapper.taskList![index],
+                    refreshList: () {
+                      _getAllCompleteTaskList();
+                    },
+                  );
+                },
+              ),
+            ),
           ),
         ),
       ),

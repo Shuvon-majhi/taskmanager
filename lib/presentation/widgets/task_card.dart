@@ -19,8 +19,9 @@ class TaskCard extends StatefulWidget {
 }
 
 class _TaskCardState extends State<TaskCard> {
-  bool _updateStatusInProgress = false;
+  bool _updateTaskStatusInProgress = false;
   bool _deleteTaskInProgress = false;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -44,7 +45,7 @@ class _TaskCardState extends State<TaskCard> {
                 ),
                 const Spacer(),
                 Visibility(
-                  visible: _updateStatusInProgress == false,
+                  visible: _updateTaskStatusInProgress == false,
                   replacement: const CircularProgressIndicator(),
                   child: IconButton(
                     onPressed: () {
@@ -88,7 +89,7 @@ class _TaskCardState extends State<TaskCard> {
                   if (_isCurrentStatus('New')) {
                     return;
                   }
-                  _isCurrentStatus('New');
+                  _updateTaskById(id, 'New');
                   Navigator.pop(context);
                 },
               ),
@@ -101,7 +102,7 @@ class _TaskCardState extends State<TaskCard> {
                   if (_isCurrentStatus('Completed')) {
                     return;
                   }
-                  _isCurrentStatus('Completed');
+                  _updateTaskById(id, 'Completed');
                   Navigator.pop(context);
                 },
               ),
@@ -114,7 +115,7 @@ class _TaskCardState extends State<TaskCard> {
                   if (_isCurrentStatus('Progress')) {
                     return;
                   }
-                  _isCurrentStatus('Progress');
+                  _updateTaskById(id, 'Progress');
                   Navigator.pop(context);
                 },
               ),
@@ -127,7 +128,7 @@ class _TaskCardState extends State<TaskCard> {
                   if (_isCurrentStatus('Cancelled')) {
                     return;
                   }
-                  _isCurrentStatus('Cancelled');
+                  _updateTaskById(id, 'Cancelled');
                   Navigator.pop(context);
                 },
               ),
@@ -138,6 +139,23 @@ class _TaskCardState extends State<TaskCard> {
     );
   }
 
+  Future<void> _updateTaskById(String id, String status) async {
+    _updateTaskStatusInProgress = true;
+    setState(() {});
+    final response =
+        await NetworkCaller.getRequest(Urls.updateTaskStatus(id, status));
+    _updateTaskStatusInProgress = false;
+    if (response.isSucces) {
+      _updateTaskStatusInProgress = false;
+      widget.refreshList();
+    } else {
+      setState(() {});
+      if (mounted) {
+        showSnackBarMessage(context,
+            response.errorMessage ?? 'Update task status has been failed');
+      }
+    }
+  }
 
   Future<void> _deleteTaskById(String id) async {
     _deleteTaskInProgress = true;

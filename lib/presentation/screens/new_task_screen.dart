@@ -7,6 +7,7 @@ import 'package:taskmanager/data/utility/urls.dart';
 import 'package:taskmanager/presentation/screens/add_new_task_screen.dart';
 import 'package:taskmanager/presentation/utils/app_colors.dart';
 import 'package:taskmanager/presentation/widgets/background_widget.dart';
+import 'package:taskmanager/presentation/widgets/empty_list_widget.dart';
 import 'package:taskmanager/presentation/widgets/new_task_counter.dart';
 import 'package:taskmanager/presentation/widgets/profile_app_bar.dart';
 import 'package:taskmanager/presentation/widgets/snack_bar_message.dart';
@@ -20,7 +21,6 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
-  
   bool _getAllTaskCountByStatusInProgress = false;
   bool _getNewTaskListInProgress = false;
   CountByStatusWrapper _countByStatusWrapper = CountByStatusWrapper();
@@ -33,7 +33,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   void _getDatafromApis() {
-
     _getAllNewTaskList();
     _getAllTaskCountByStatus();
   }
@@ -64,16 +63,20 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                   onRefresh: () async {
                     _getDatafromApis();
                   },
-                  child: ListView.builder(
-                    itemCount: _newTaskListWrapper.taskList?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      return TaskCard(
-                        taskItem: _newTaskListWrapper.taskList![index],
-                        refreshList: () {
-                          _getDatafromApis();
-                        },
-                      );
-                    },
+                  child: Visibility(
+                    visible: _newTaskListWrapper.taskList?.isNotEmpty ?? false,
+                    replacement: const emptyListWidget(),
+                    child: ListView.builder(
+                      itemCount: _newTaskListWrapper.taskList?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        return TaskCard(
+                          taskItem: _newTaskListWrapper.taskList![index],
+                          refreshList: () {
+                            _getDatafromApis();
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -82,14 +85,17 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           //TODO: recall the home apis
-          Navigator.push(
+          final result = Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => const AddNewTaskScreen(),
             ),
           );
+          if (result == true) {
+            _getDatafromApis();
+          }
         },
         backgroundColor: AppColors.themecolor,
         child: const Icon(
@@ -166,6 +172,4 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       }
     }
   }
-
- 
 }
